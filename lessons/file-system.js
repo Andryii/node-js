@@ -1,5 +1,7 @@
 const { rejects } = require("assert");
+const { count } = require("console");
 const fs = require("fs");
+const fsPromise = require("fs/promises");
 const { resolve } = require("path");
 const path = require("path");
 
@@ -87,6 +89,19 @@ const removeFileAsync = async (path) => {
 //   console.log("file was remove");
 // });
 
+// const text = process.env.TEXT || "Some text for ex";
+
+// const paths = {
+//   firstpath: path.resolve(__dirname, "text.txt"),
+//   secondpath: path.resolve(__dirname, "count.txt"),
+// };
+
+// writeFileAsync(paths.firstpath, text)
+//   .then(() => readFileAsync(paths.firstpath))
+//   .then((data) => String(data.split(" ").length))
+//   .then((count) => writeFileAsync(paths.secondpath, count))
+//   .then(() => removeFileAsync(paths.firstpath));
+
 const text = process.env.TEXT || "Some text for ex";
 
 const paths = {
@@ -94,8 +109,11 @@ const paths = {
   secondpath: path.resolve(__dirname, "count.txt"),
 };
 
-writeFileAsync(paths.firstpath, text)
-  .then(() => readFileAsync(paths.firstpath))
+fsPromise
+  .writeFile(paths.firstpath, text, { encoding: "utf-8" })
+  .then(() => fsPromise.readFile(paths.firstpath, { encoding: "utf-8" }))
   .then((data) => String(data.split(" ").length))
-  .then((count) => writeFileAsync(paths.secondpath, count))
-  .then(() => removeFileAsync(paths.firstpath));
+  .then((count) =>
+    fsPromise.writeFile(paths.secondpath, count, { encoding: "utf-8" })
+  )
+  .then(() => fsPromise.rm(paths.firstpath));
