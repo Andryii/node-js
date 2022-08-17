@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./lessons/process.js"
+    "start": "cross-env TEXT=\"oooo dsf safd\" node ./lessons/file-system.js"
   },
   "author": "",
   "license": "ISC",
