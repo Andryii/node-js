@@ -102,18 +102,19 @@ const removeFileAsync = async (path) => {
 //   .then((count) => writeFileAsync(paths.secondpath, count))
 //   .then(() => removeFileAsync(paths.firstpath));
 
-const text = process.env.TEXT || "Some text for ex";
+// const text = process.env.TEXT || "Some text for ex";
 
-const paths = {
-  firstpath: path.resolve(__dirname, "text.txt"),
-  secondpath: path.resolve(__dirname, "count.txt"),
-};
+// const paths = {
+//   firstpath: path.resolve(__dirname, "text.txt"),
+//   secondpath: path.resolve(__dirname, "count.txt"),
+// };
 
-fsPromise
-  .writeFile(paths.firstpath, text, { encoding: "utf-8" })
-  .then(() => fsPromise.readFile(paths.firstpath, { encoding: "utf-8" }))
-  .then((data) => String(data.split(" ").length))
-  .then((count) =>
-    fsPromise.writeFile(paths.secondpath, count, { encoding: "utf-8" })
-  )
-  .then(() => fsPromise.rm(paths.firstpath));
+// fsPromise
+//   .writeFile(paths.firstpath, text, { encoding: "utf-8" })
+//   .then(() => fsPromise.readFile(paths.firstpath, { encoding: "utf-8" }))
+//   .then((data) => String(data.split(" ").length))
+//   .then((count) =>
+//     fsPromise.writeFile(paths.secondpath, count, { encoding: "utf-8" })
+//   )
+//   .then(() => fsPromise.rm(paths.firstpath));
+
