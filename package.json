@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env MESSAGE=\"message 123\" node ./lessons/events.js"
+    "start": "nodemon ./index.js"
   },
   "author": "",
   "license": "ISC",
