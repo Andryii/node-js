@@ -1,11 +1,17 @@
 const http = require("http");
 const EvntEmitter = require("events");
 const path = require("path");
+const bodyParser = require('./bodyParser')
 
 module.exports = class Application {
   constructor() {
     this.emitter = new EvntEmitter();
     this.server = this._createServer();
+    this.middlewere = [];
+  }
+
+  use(middlewere) {
+    this.middlewere.push(middlewere);
   }
 
   listen(port, callback) {
@@ -16,8 +22,9 @@ module.exports = class Application {
     Object.keys(router.endpoints).forEach((path) => {
       const endpoint = router.endpoints[path];
       Object.keys(endpoint).forEach((method) => {
-        const handler = endpoint[method];
         this.emitter.on(this._getRouterMask(path, method), (req, res) => {
+          const handler = endpoint[method];
+          
           handler(req, res);
         });
       });
@@ -26,14 +33,23 @@ module.exports = class Application {
 
   _createServer() {
     return http.createServer((req, res) => {
-      const emitted = this.emitter.emit(
-        this._getRouterMask(req.url, req.method),
-        req,
-        res
-      );
-      if (!emitted) {
-        res.end();
-      }
+
+        bodyParser(req,res, ()=>
+        {
+            
+            this.middlewere.forEach((middlewere) => middlewere(req, res));
+            
+            const emitted = this.emitter.emit(
+                this._getRouterMask(req.pathname, req.method),
+                req,
+                res
+              );
+              if (!emitted) {
+                res.end();
+              }
+        })
+
+
     });
   }
 
