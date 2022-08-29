@@ -1,5 +1,5 @@
 // сделать мидлварину
-module.exports = (req, res, callback)=>
+module.exports = (req, res, )=>
 {
     let body = "";
 
@@ -10,8 +10,7 @@ module.exports = (req, res, callback)=>
     req.on("end", () => {
       if (body) {
         req.body = JSON.parse(body);
+        console.log("body parse end");
       }
-      callback();
-
     });
 }
