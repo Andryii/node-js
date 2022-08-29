@@ -1,9 +1,7 @@
 const http = require("http");
 const EvntEmitter = require("events");
 const path = require("path");
-const bodyParser = require("./bodyParser");
-const { resolve } = require("path");
-const { rejects } = require("assert");
+const bodyParser = require('./bodyParser')
 
 module.exports = class Application {
   constructor() {
@@ -26,7 +24,7 @@ module.exports = class Application {
       Object.keys(endpoint).forEach((method) => {
         this.emitter.on(this._getRouterMask(path, method), (req, res) => {
           const handler = endpoint[method];
-
+          
           handler(req, res);
         });
       });
@@ -35,28 +33,22 @@ module.exports = class Application {
 
   _createServer() {
     return http.createServer((req, res) => {
-      new Promise((resolve, rejects) => {
-        console.log("Start working middleweres");
 
-        try {
-          this.middlewere.forEach((middlewere) => middlewere(req, res));
-        } catch (error) {
-          rejects(error);
-        }
-        resolve();
+        bodyParser(req,res, ()=>
+        {
+            
+            this.middlewere.forEach((middlewere) => middlewere(req, res));
+            
+            const emitted = this.emitter.emit(
+                this._getRouterMask(req.pathname, req.method),
+                req,
+                res
+              );
+              if (!emitted) {
+                res.end();
+              }
+        })
 
-
-      }).then(() => {
-        console.log("emmit");
-        const emitted = this.emitter.emit(
-          this._getRouterMask(req.pathname, req.method),
-          req,
-          res
-        );
-        if (!emitted) {
-          res.end();
-        }
-      });
     });
   }
 
